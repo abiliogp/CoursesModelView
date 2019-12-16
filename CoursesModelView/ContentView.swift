@@ -10,22 +10,19 @@ import UIKit
 import SwiftUI
 
 let apiUrl = "https://api.letsbuildthatapp.com/static/courses.json"
+//https://docs.openaq.org/#api-Latest-GetLatest
 
 struct Course: Identifiable, Decodable {
     let id = UUID()
     let name: String
+    let price: Int
 }
 
 class CoursesViewModel: ObservableObject{
-    @Published var messages = "This message"
     
-    @Published var courses: [Course] = [
-        
-    ]
+    @Published var courses: [Course] = []
     
-    func changeMessage(){
-        self.messages = "ok"
-    }
+    
     
     func fetchCourses(){
         guard let url = URL(string: apiUrl) else { return }
@@ -57,18 +54,18 @@ struct ContentView: View{
     var body: some View{
         NavigationView{
             ListOrEmpthy(coursersVM: coursersVM)
-            .navigationBarTitle("Swift UI")
-            .navigationBarItems(trailing:
-                Button(action: {
-                    self.coursersVM.fetchCourses()
-                    self.isPressed = !self.isPressed
-                }, label: {
-                    Text("Fetch")
-                })
-                    .foregroundColor(.white)
-                    .padding(6)
-                    .background(isPressed ? Color.green : Color.red)
-                    .cornerRadius(12)
+                .navigationBarTitle("Swift UI")
+                .navigationBarItems(trailing:
+                    Button(action: {
+                        self.coursersVM.fetchCourses()
+                        self.isPressed = !self.isPressed
+                    }, label: {
+                        Text("Fetch")
+                    })
+                        .foregroundColor(.white)
+                        .padding(6)
+                        .background(isPressed ? Color.green : Color.red)
+                        .cornerRadius(12)
             ).animation(.easeIn)
         }
         
@@ -79,25 +76,62 @@ struct ContentView: View{
 struct ListOrEmpthy: View {
     @ObservedObject var coursersVM = CoursesViewModel()
     
-    
     var body: some View{
-        Section{
+        Group{
             if(coursersVM.courses.isEmpty){
-                Text("Press Fetch")
+                VStack{
+                    Text("Press Fetch")
+                }
             } else{
                 List(coursersVM.courses){ course in
-                    Text(course.name)
-                        .foregroundColor(.white)
-                        .padding(10)
-                        .background(Color.blue, alignment: .center)
-                        .cornerRadius(12)
-                        .padding(4)
+                    VStack(alignment: .leading){
+                        Text(course.name)
+                            .foregroundColor(.primary)
+                            .font(.headline)
+                            .padding(4)
+                        Divider()
+                        PriceCell(price: course.price)
+
+                    }.padding(10)
+                        .background(Color.secondary, alignment: .leading)
+                    .cornerRadius(12)
+
                 }
             }
         }
     }
     
+}
+
+
+struct PriceCell: View {
+    var price = 0
     
+    var body: some View{
+        Group{
+            if(price > 75){
+                TextPrice(price: price, color: Color.red)
+            } else if(price > 50){
+                TextPrice(price: price, color: Color.orange)
+            } else if(price > 25){
+                TextPrice(price: price, color: Color.yellow)
+            } else{
+                TextPrice(price: price, color: Color.green)
+            }
+        }
+    }
+}
+
+struct TextPrice: View {
+    var price: Int
+    var color: Color
     
-    
+    var body: some View{
+        Text("Price: $\(price)")
+        .font(.subheadline)
+        .foregroundColor(.secondary)
+            .background(color, alignment: .leading)
+            .cornerRadius(4)
+        .padding(4)
+    }
 }
