@@ -9,43 +9,6 @@
 import UIKit
 import SwiftUI
 
-let apiUrl = "https://api.letsbuildthatapp.com/static/courses.json"
-//https://docs.openaq.org/#api-Latest-GetLatest
-
-struct Course: Identifiable, Decodable {
-    let id = UUID()
-    let name: String
-    let price: Int
-}
-
-class CoursesViewModel: ObservableObject{
-    
-    @Published var courses: [Course] = []
-    
-    
-    
-    func fetchCourses(){
-        guard let url = URL(string: apiUrl) else { return }
-        URLSession.shared.dataTask(with: url) {
-            (data, resp, error) in
-            
-            DispatchQueue.main.async {
-                do{
-                    let newCourses = try JSONDecoder().decode([Course].self, from: data!)
-                    
-                    self.courses.append(contentsOf: newCourses)
-                    
-                } catch{
-                    
-                }
-            }
-            
-            
-        }.resume()
-    }
-}
-
-
 struct ContentView: View{
     
     @ObservedObject var coursersVM = CoursesViewModel()
@@ -68,9 +31,7 @@ struct ContentView: View{
                         .cornerRadius(12)
             ).animation(.easeIn)
         }
-        
     }
-    
 }
 
 struct ListOrEmpthy: View {
@@ -84,23 +45,25 @@ struct ListOrEmpthy: View {
                 }
             } else{
                 List(coursersVM.courses){ course in
-                    VStack(alignment: .leading){
-                        Text(course.name)
-                            .foregroundColor(.primary)
-                            .font(.headline)
-                            .padding(4)
-                        Divider()
-                        PriceCell(price: course.price)
-
+                    HStack {
+                        VStack(alignment: .leading){
+                            Text(course.name)
+                                .foregroundColor(.primary)
+                                .font(.headline)
+                                .padding(4)
+                            Divider()
+                            PriceCell(price: course.price)
+                            
+                        }
+                        
+                        ImageView(withURL: course.bannerUrl)
                     }.padding(10)
-                        .background(Color.secondary, alignment: .leading)
-                    .cornerRadius(12)
-
+                        .background(Color.secondary, alignment:.leading)
+                        .cornerRadius(12)
                 }
             }
         }
     }
-    
 }
 
 
@@ -128,10 +91,47 @@ struct TextPrice: View {
     
     var body: some View{
         Text("Price: $\(price)")
-        .font(.subheadline)
-        .foregroundColor(.secondary)
+            .font(.subheadline)
+            .foregroundColor(.secondary)
             .background(color, alignment: .leading)
             .cornerRadius(4)
-        .padding(4)
+            .padding(4)
+    }
+}
+
+struct ImageView: View {
+    @ObservedObject var imageLoader: ImageLoader
+    
+    init(withURL url:String) {
+        imageLoader = ImageLoader(urlString:url)
+    }
+    
+    var body: some View {
+        Group {
+            if imageLoader.data != nil{
+                Image(uiImage: UIImage(data:imageLoader.data!) ?? UIImage())
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width:100, height:100)
+            } else{
+                ActivityIndicator()
+            }
+        }.frame(width: 100.0, height: 100.0, alignment: .center)
+    }
+}
+
+struct ActivityIndicator: UIViewRepresentable {
+    
+    typealias UIView = UIActivityIndicatorView
+
+    fileprivate var configuration = { (indicator: UIView) in }
+    
+    func makeUIView(context: UIViewRepresentableContext<Self>) -> UIView {
+        UIView()
+    }
+    
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<Self>) {
+        uiView.startAnimating()
+        configuration(uiView)
     }
 }
