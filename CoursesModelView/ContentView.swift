@@ -45,27 +45,28 @@ struct ListOrEmpthy: View {
                 }
             } else{
                 List(coursersVM.courses){ course in
-                    HStack {
-                        VStack(alignment: .leading){
-                            Text(course.name)
-                                .foregroundColor(.primary)
-                                .font(.headline)
-                                .padding(4)
-                            Divider()
-                            PriceCell(price: course.price)
-                            
-                        }
+                    NavigationLink(destination: DetailContentView(course: course)) {
+                        HStack {
+                            VStack(alignment: .leading){
+                                Text(course.name)
+                                    .foregroundColor(.primary)
+                                    .font(.headline)
+                                    .padding(4)
+                                Divider()
+                                PriceCell(price: course.price)
+                            }
+                            ImageView(withURL: course.bannerUrl)
+                                .frame(width: 100, height: 100, alignment: .center)
+                        }.padding(10)
+                            .background(Color.secondary, alignment:.leading)
+                            .cornerRadius(12)
                         
-                        ImageView(withURL: course.bannerUrl)
-                    }.padding(10)
-                        .background(Color.secondary, alignment:.leading)
-                        .cornerRadius(12)
+                    }
                 }
             }
         }
     }
 }
-
 
 struct PriceCell: View {
     var price = 0
@@ -112,18 +113,17 @@ struct ImageView: View {
                 Image(uiImage: UIImage(data:imageLoader.data!) ?? UIImage())
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width:100, height:100)
             } else{
                 ActivityIndicator()
             }
-        }.frame(width: 100.0, height: 100.0, alignment: .center)
+        }
     }
 }
 
 struct ActivityIndicator: UIViewRepresentable {
     
     typealias UIView = UIActivityIndicatorView
-
+    
     fileprivate var configuration = { (indicator: UIView) in }
     
     func makeUIView(context: UIViewRepresentableContext<Self>) -> UIView {

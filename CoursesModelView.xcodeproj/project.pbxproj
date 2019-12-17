@@ -17,6 +17,7 @@
 		E0AE3FC6239E69B800A6F661 /* CoursesModelViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE3FC5239E69B800A6F661 /* CoursesModelViewTests.swift */; };
 		E0AE3FD1239E69B800A6F661 /* CoursesModelViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE3FD0239E69B800A6F661 /* CoursesModelViewUITests.swift */; };
 		E0BBBDD723A92A6100616EEB /* CoursesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BBBDD623A92A6100616EEB /* CoursesViewModel.swift */; };
+		E0BBBDD923A9349100616EEB /* DetailContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BBBDD823A9349100616EEB /* DetailContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		E0AE3FD0239E69B800A6F661 /* CoursesModelViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursesModelViewUITests.swift; sourceTree = "<group>"; };
 		E0AE3FD2239E69B800A6F661 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E0BBBDD623A92A6100616EEB /* CoursesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursesViewModel.swift; sourceTree = "<group>"; };
+		E0BBBDD823A9349100616EEB /* DetailContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				E0AE3FB6239E69B800A6F661 /* Preview Content */,
 				E00BB2AE23A8F3F600D43043 /* ImageLoader.swift */,
 				E0BBBDD623A92A6100616EEB /* CoursesViewModel.swift */,
+				E0BBBDD823A9349100616EEB /* DetailContentView.swift */,
 			);
 			path = CoursesModelView;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 				E0AE3FB1239E69B200A6F661 /* SceneDelegate.swift in Sources */,
 				E00BB2AF23A8F3F600D43043 /* ImageLoader.swift in Sources */,
 				E0AE3FB3239E69B200A6F661 /* ContentView.swift in Sources */,
+				E0BBBDD923A9349100616EEB /* DetailContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
