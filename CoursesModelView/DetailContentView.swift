@@ -9,23 +9,22 @@
 import Foundation
 import SwiftUI
 
-
 struct DetailContentView: View {
     
     var course: Course!
     
-    
     var body: some View{
         Form{
-            ImageView(withURL: course.bannerUrl)
-            
+            Section{
+                ImageView(withURL: course.bannerUrl)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                    .shadow(radius: 10)
+            }
             Section{
                 Text(course.name)
                 PriceCell(price: course.price)
             }
-
         }.navigationBarTitle(course.name)
-
-        
     }
 }

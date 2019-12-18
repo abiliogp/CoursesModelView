@@ -32,11 +32,9 @@ class CoursesViewModel: ObservableObject{
                 DispatchQueue.main.async {
                     do{
                         let newCourses = try JSONDecoder().decode([Course].self, from: data)
-                        
                         self.courses.append(contentsOf: newCourses)
-                        
                     } catch{
-                        
+                        self.courses.append(contentsOf: [])
                     }
                 }
             }
