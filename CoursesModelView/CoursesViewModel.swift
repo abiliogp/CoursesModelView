@@ -19,6 +19,12 @@ struct Course: Identifiable, Decodable {
     let bannerUrl: String
 }
 
+enum Strengths: String {
+    case Mild, Medium, Mature
+    
+    static let allValues = [Mild, Medium, Mature]
+}
+
 class CoursesViewModel: ObservableObject{
     
     @Published var courses: [Course] = []
@@ -39,5 +45,11 @@ class CoursesViewModel: ObservableObject{
                 }
             }
         }.resume()
+    }
+    
+    func orderCoursesByLowerPrice(){
+        courses.sort { (c1, c2) -> Bool in
+            return c1.price < c2.price
+        }
     }
 }

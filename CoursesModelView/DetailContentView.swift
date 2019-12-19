@@ -11,6 +11,11 @@ import SwiftUI
 
 struct DetailContentView: View {
     
+    @EnvironmentObject var settings: UserSettings
+    
+    @State private var selectedStrength = 0
+    
+    
     var course: Course!
     
     var body: some View{
@@ -24,6 +29,14 @@ struct DetailContentView: View {
             Section{
                 Text(course.name)
                 PriceCell(price: course.price)
+                Text("Fetch \(settings.score)")
+                
+                Picker(selection: $selectedStrength, label: Text("Strength")) {
+                    ForEach(0 ..< Strengths.allValues.count){
+                        Text(Strengths.allValues[$0].rawValue)
+                    }
+                }.pickerStyle(SegmentedPickerStyle())
+                
             }
         }.navigationBarTitle(course.name)
     }

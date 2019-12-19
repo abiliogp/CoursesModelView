@@ -11,6 +11,8 @@ import SwiftUI
 
 struct ContentView: View{
     
+    @EnvironmentObject var settings: UserSettings
+    
     @ObservedObject var coursersVM = CoursesViewModel()
     @State private var isPressed = false
     
@@ -19,16 +21,29 @@ struct ContentView: View{
             ListOrEmpthy(coursersVM: coursersVM)
                 .navigationBarTitle("Courses")
                 .navigationBarItems(trailing:
-                    Button(action: {
-                        self.coursersVM.fetchCourses()
-                        self.isPressed = !self.isPressed
-                    }, label: {
-                        Text("Fetch")
-                    })
-                        .foregroundColor(.white)
-                        .padding(6)
-                        .background(isPressed ? Color.green : Color.red)
-                        .cornerRadius(12)
+                    HStack{
+                        Button(action: {
+                            self.coursersVM.fetchCourses()
+                            self.isPressed = !self.isPressed
+                            self.settings.score += 1
+                        }, label: {
+                            Text("Fetch \(self.settings.score)")
+                        })
+                            .foregroundColor(.white)
+                            .padding(6)
+                            .background(isPressed ? Color.green : Color.red)
+                            .cornerRadius(12)
+                        
+                        if(coursersVM.courses.isEmpty == false){
+                            Button(action: {
+                                self.coursersVM.orderCoursesByLowerPrice()
+                            }) {
+                                Text("Sort")
+                            }
+                            
+                            EditButton()
+                        }
+                    }
             ).animation(.easeIn)
         }
     }
@@ -55,14 +70,25 @@ struct ListOrEmpthy: View {
                             }
                         }.padding(.horizontal, 16)
                     }.padding(.horizontal, -16)
-                    ForEach(coursersVM.courses){ course in
-                        NavigationLink(destination: DetailContentView(course: course)) {
-                            CardCell(course: course)
-                        }
-                    }
+                        ForEach(coursersVM.courses){ course in
+                            NavigationLink(destination: DetailContentView(course: course)) {
+                                CardCell(course: course)
+                            }
+                        }.onDelete(perform: delete)
+                            .onMove(perform: move)
+                    
+                    
                 }
             }
         }
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        coursersVM.courses.move(fromOffsets: source, toOffset: destination)
+    }
+    
+    func delete(at offsets: IndexSet) {
+        coursersVM.courses.remove(atOffsets: offsets)
     }
 }
 
